@@ -1,12 +1,12 @@
-/* Intron
+/* This program will print its own source when run.
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-char* q = "/* Intron\n */\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nchar* q = \"%s\";\n\nchar* repr (char* s) {\n  char* r = (char*) malloc ((2*strlen(s)+1)*sizeof(char));;\n  int i = 0;  int j = 0;\n  for (; (r[j] = s[i++]);)\n    switch (r[j]) {\n    case '\\\\': r[j++] = '\\\\'; r[j++] = '\\\\'; break;\n    case '\\n': r[j++] = '\\\\'; r[j++] = 'n'; break;\n    case '\"':  r[j++] = '\\\\'; r[j++] = '\"'; break;\n    default: j++; break;\n    }\n  return r;\n}\n\nint main(int argc, char** args) {\n  printf (q, repr(q));\n  return 0;\n}\n";
+char* q = "/* This program will print its own source when run.\n */\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nchar* q = \"%s\";\n\nchar* escape (char* s) {\n  char* r = (char*) malloc ((2*strlen(s)+1)*sizeof(char));;\n  int i = 0;  int j = 0;\n  for (; (r[j] = s[i++]);)\n    switch (r[j]) {\n    case '\\\\': r[j++] = '\\\\'; r[j++] = '\\\\'; break;\n    case '\\n': r[j++] = '\\\\'; r[j++] = 'n'; break;\n    case '\"':  r[j++] = '\\\\'; r[j++] = '\"'; break;\n    default: j++; break;\n    }\n  return r;\n}\n\nint main(int argc, char** args) {\n  printf (q, escape(q));\n  return 0;\n}\n";
 
-char* repr (char* s) {
+char* escape (char* s) {
   char* r = (char*) malloc ((2*strlen(s)+1)*sizeof(char));;
   int i = 0;  int j = 0;
   for (; (r[j] = s[i++]);)
@@ -20,6 +20,6 @@ char* repr (char* s) {
 }
 
 int main(int argc, char** args) {
-  printf (q, repr(q));
+  printf (q, escape(q));
   return 0;
 }
