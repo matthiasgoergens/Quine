@@ -1,25 +1,34 @@
 /* This program will print its own source when run.
  */
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
 
-char* q = "/* This program will print its own source when run.\n */\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nchar* q = \"%s\";\n\nchar* escape (char* s) {\n  char* r = (char*) malloc ((2*strlen(s)+1)*sizeof(char));\n  int i = 0;  int j = 0;\n  for (; (r[j] = s[i++]);)\n    switch (r[j]) {\n    case '\\\\': r[j++] = '\\\\'; r[j++] = '\\\\'; break;\n    case '\\n': r[j++] = '\\\\'; r[j++] = 'n'; break;\n    case '\"':  r[j++] = '\\\\'; r[j++] = '\"'; break;\n    default: j++; break;\n    }\n  return r;\n}\n\nint main(int argc, char** args) {\n  printf (q, escape(q));\n  return 0;\n}\n";
+char* q = "/* This program will print its own source when run.\n */\n#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\nchar* q = \"%s\";\n\nchar* escape (char* input) {\n  char translateFrom[] = \"\\a\\b\\f\\n\\r\\t\\v\\\\\\\"\\\'\";\n  char translateTo[] = \"abfnrtv\\\\\\\"\\\'\";\n\n  /* In the worst case, we will have to escape every character, so at\n     most the size of the string doubles.  +1 for tailing \\0.\n  */\n  char* output = (char*) calloc ((2*strlen(input)+1), sizeof(char));\n  char* outputStart = output;\n\n  for (;*input; input++) {\n    char* pos;\n    if (NULL != (pos = strchr(translateFrom, *input))) {\n      *output++ = \'\\\\\';\n      *output++ = translateTo[pos-translateFrom];\n    }\n    else\n      *output++ = *input;\n  }\n  return outputStart;\n}\n\nint main() {\n  printf (q, escape(q));\n  return 0;\n}\n";
 
-char* escape (char* s) {
-  char* r = (char*) malloc ((2*strlen(s)+1)*sizeof(char));
-  int i = 0;  int j = 0;
-  for (; (r[j] = s[i++]);)
-    switch (r[j]) {
-    case '\\': r[j++] = '\\'; r[j++] = '\\'; break;
-    case '\n': r[j++] = '\\'; r[j++] = 'n'; break;
-    case '"':  r[j++] = '\\'; r[j++] = '"'; break;
-    default: j++; break;
+char* escape (char* input) {
+  char translateFrom[] = "\a\b\f\n\r\t\v\\\"\'";
+  char translateTo[] = "abfnrtv\\\"\'";
+
+  /* In the worst case, we will have to escape every character, so at
+     most the size of the string doubles.  +1 for tailing \0.
+  */
+  char* output = (char*) calloc ((2*strlen(input)+1), sizeof(char));
+  char* outputStart = output;
+
+  for (;*input; input++) {
+    char* pos;
+    if (NULL != (pos = strchr(translateFrom, *input))) {
+      *output++ = '\\';
+      *output++ = translateTo[pos-translateFrom];
     }
-  return r;
+    else
+      *output++ = *input;
+  }
+  return outputStart;
 }
 
-int main(int argc, char** args) {
+int main() {
   printf (q, escape(q));
   return 0;
 }
