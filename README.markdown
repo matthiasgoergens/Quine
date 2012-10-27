@@ -1,6 +1,6 @@
 Run
 
-    /quine.py < pre_quine.c  > quine.c
+    ./quine.py < pre_quine.c  > quine.c
 
 to get quine.c which will print it's own source code when compiled
 
@@ -8,7 +8,7 @@ to get quine.c which will print it's own source code when compiled
 
 and run:
 
-    /quine
+    ./quine
 
 Not convinced? Check with:
 
