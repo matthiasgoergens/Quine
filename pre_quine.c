@@ -11,7 +11,7 @@ char* escape (char* input) {
   char translateTo[] = "abfnrtv\\\"\'";
 
   /* In the worst case, we will have to escape every character, so at
-     most the size of the string doubles.  +1 for tailing \0.
+     most the size of the string doubles.  +1 for trailing \0.
   */
   char* output = (char*) calloc ((2*strlen(input)+1), sizeof(char));
   char* outputStart = output;
